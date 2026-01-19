@@ -8,6 +8,10 @@ let MAP_PASAR_KOTA = {};
 let GLOBAL_MIN_DATE = null;
 let GLOBAL_MAX_DATE = null;
 
+
+
+
+
 /* ================= SPINNER ================= */
 function showSourceSpinner() { $('#loadingSource').removeClass('d-none'); }
 function hideSourceSpinner() { $('#loadingSource').addClass('d-none'); }

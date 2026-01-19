@@ -31,7 +31,7 @@ function runACFPACF(series) {
 ========================= */
 function loadACF(series) {
     $.ajax({
-        url: "http://127.0.0.1:8000/acf-plot",
+        url: url_api+"/acf-plot",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ data: series }),
@@ -51,7 +51,7 @@ function loadACF(series) {
 ========================= */
 function loadPACF(series) {
     $.ajax({
-        url: "http://127.0.0.1:8000/pacf-plot",
+        url: url_api+"/pacf-plot",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ data: series }),

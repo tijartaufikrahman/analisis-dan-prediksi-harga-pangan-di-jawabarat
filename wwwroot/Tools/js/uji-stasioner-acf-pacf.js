@@ -34,7 +34,7 @@ function runADF(series, stage) {
     $(target).html(`<div class="alert alert-info">Menghitung ADF...</div>`);
 
     $.ajax({
-        url: "http://127.0.0.1:8000/adf-test",
+        url: url_api+"/adf-test",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ data: series }),
@@ -55,7 +55,7 @@ function runKPSS(series, stage, adfStationary) {
     $(target).html(`<div class="alert alert-info">Menghitung KPSS...</div>`);
 
     $.ajax({
-        url: "http://127.0.0.1:8000/kpss-test",
+        url: url_api+"/kpss-test",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ data: series }),
@@ -103,7 +103,7 @@ function runKPSS(series, stage, adfStationary) {
 function runDifferencing(series) {
 
     $.ajax({
-        url: "http://127.0.0.1:8000/difference",
+        url: url_api+"/difference",
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({ data: series }),

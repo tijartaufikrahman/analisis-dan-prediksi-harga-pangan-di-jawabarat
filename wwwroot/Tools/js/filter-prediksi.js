@@ -2,11 +2,16 @@
 let GLOBAL_RAW_DATA_PREDIKSI = [];
 let GLOBAL_FILTERED_DATA_PREDIKSI = [];
 
+
 let MAP_KOTA_PASAR_PREDIKSI = {};
 let MAP_PASAR_KOTA_PREDIKSI = {};
 
 let GLOBAL_MIN_DATE = null;
 let GLOBAL_MAX_DATE = null;
+
+let GLOBAL_AGGREGATED_DATA = [];
+let GLOBAL_TRAIN_DATA = [];
+let GLOBAL_TEST_DATA = [];
 
 console.log("runStationarityTest(aggregated);");
 
@@ -28,6 +33,7 @@ $('#btnApplySourcePrediksi').on('click', function () {
 
         GLOBAL_RAW_DATA_PREDIKSI = parseCSV(lines);
         GLOBAL_FILTERED_DATA_PREDIKSI = [...GLOBAL_RAW_DATA_PREDIKSI];
+       
 
         buildRelations();
 
@@ -129,12 +135,35 @@ function btnApplyFilterPrediksi() {
 
         renderPreviewTable(GLOBAL_FILTERED_DATA_PREDIKSI);
 
+        // //
         let aggregated = aggregateByPeriod(GLOBAL_FILTERED_DATA_PREDIKSI, periode);
+
+        // simpan full aggregated
+        GLOBAL_AGGREGATED_DATA = aggregated;
+
+        // ambil input test size
+        let testSize = parseInt($('#inputTestSizePrediksi').val()) || 0;
+
+        // potong train & test
+        let split = splitTrainTestFromAggregated(aggregated, testSize);
+
+        // simpan global
+        GLOBAL_TRAIN_DATA = split.train;
+        GLOBAL_TEST_DATA = split.test;
+
+        // render tabel pakai FULL aggregated (bukan train/test)
         renderAgregasiTable(aggregated);
 
+        // contoh pemanggilan API / uji stasioner
+        runStationarityTest(GLOBAL_TRAIN_DATA);
 
-        runStationarityTest(aggregated);
-        console.log("runStationarityTest(aggregated);");
+        console.log('FULL', GLOBAL_AGGREGATED_DATA);
+        console.log('TRAIN', GLOBAL_TRAIN_DATA);
+        console.log('TEST', GLOBAL_TEST_DATA);
+
+        // //
+
+        
         
 
         hideFilterSpinner();
@@ -350,4 +379,30 @@ function formatDate(d) {
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
+}
+
+function splitTrainTestFromAggregated(aggregated, testSize) {
+
+    if (!Array.isArray(aggregated) || aggregated.length === 0) {
+        return { train: [], test: [] };
+    }
+
+    if (testSize <= 0) {
+        return {
+            train: [...aggregated],
+            test: []
+        };
+    }
+
+    if (testSize >= aggregated.length) {
+        return {
+            train: [],
+            test: [...aggregated]
+        };
+    }
+
+    let train = aggregated.slice(0, aggregated.length - testSize);
+    let test = aggregated.slice(aggregated.length - testSize);
+
+    return { train, test };
 }
