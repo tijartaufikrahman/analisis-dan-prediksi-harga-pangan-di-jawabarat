@@ -8,6 +8,8 @@ let MAP_PASAR_KOTA_PREDIKSI = {};
 let GLOBAL_MIN_DATE = null;
 let GLOBAL_MAX_DATE = null;
 
+console.log("runStationarityTest(aggregated);");
+
 /* ================= SPINNER ================= */
 function showSourceSpinner() { $('#loadingSource').removeClass('d-none'); }
 function hideSourceSpinner() { $('#loadingSource').addClass('d-none'); }
@@ -37,6 +39,9 @@ $('#btnApplySourcePrediksi').on('click', function () {
         renderAgregasiTable([]);
 
         hideSourceSpinner();
+
+        // pindah file
+        btnApplyFilterPrediksi();
     }).fail(function () {
         hideSourceSpinner();
     });
@@ -93,8 +98,8 @@ $('#selCityPrediksiPrediksi').on('change', function () {
 });
 
 /* ================= APPLY FILTER ================= */
-$('#btnApplyFilterPrediksi').on('click', function () {
 
+function btnApplyFilterPrediksi() {
     showFilterSpinner();
 
     // 🔥 PAKSA BROWSER RENDER SPINNER
@@ -127,12 +132,22 @@ $('#btnApplyFilterPrediksi').on('click', function () {
         let aggregated = aggregateByPeriod(GLOBAL_FILTERED_DATA_PREDIKSI, periode);
         renderAgregasiTable(aggregated);
 
-        hideFilterSpinner();
 
+        runStationarityTest(aggregated);
+        console.log("runStationarityTest(aggregated);");
         
 
-    }, 0);
-});
+        hideFilterSpinner();
+
+        $('.d-display-prediksi').show();
+
+
+
+    }, 0); 
+}
+
+    
+
 
 /* ================= AGREGASI ================= */
 function aggregateByPeriod(data, period) {
@@ -219,12 +234,13 @@ function renderAgregasiTable(data) {
 
         tbody.append(`
             <tr>
-                <td>${i + 1}</td>
-                <td>${d.periode}</td>
-                <td class="text-end">${d.avg.toLocaleString('id-ID', { maximumFractionDigits: 0 })}</td>
-                <td>${arah}</td>
+                <td class="text-center" >${i + 1}</td>
+                <td class="text-center">${d.periode}</td>
+                <td class="text-center">${d.avg.toLocaleString('id-ID', { maximumFractionDigits: 0 })}</td>
+                <td class="text-center">${arah}</td>
             </tr>
         `);
+
 
         prev = d.avg;
     });

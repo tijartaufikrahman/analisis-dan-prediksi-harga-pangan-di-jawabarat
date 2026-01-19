@@ -37,6 +37,7 @@ $('#btnApplySource').on('click', function () {
         renderAgregasiTable([]);
 
         hideSourceSpinner();
+        $(".d-analisis-filter").show();
 
         //INI PINDAH KE FILE
         btnApplyFilter();
@@ -132,6 +133,7 @@ function btnApplyFilter() {
         renderAgregasiTable(aggregated);
 
         hideFilterSpinner();
+        $(".d-analisis").show();
 
         console.log(GLOBAL_FILTERED_DATA);
 
